@@ -1,25 +1,34 @@
-#Python program for bfloat16, a truncated mantissa version of IEEE 754 float32
+#Python program for bfloat, a truncated mantissa version of IEEE 754 float32
 from numpy import float32
 from numpy import random
 import sys
 
 class bfloat:
-	def __init__(self, s, e, m):
+	def __init__(self, s, e = '', m = ''):
 		if len(s) + len(e) + len(m) != 16:
 			print("Argument isn't 16bits:" , s, e, m)
 		else:
-			self.sign = s
-			self.exp = e
-			self.man  = m
+			#Unparsed string is provided 
+			if s and e == '' and m == '':
+				self.sign = s[0]
+				self.exp = s[1:9]
+				self.man = s[9:]
+			#Parse string is provided
+			else:
+				self.sign = s
+				self.exp = e
+				self.man  = m
+
 			self.value = ''
 
+			#TODO: add -inf, -NaN, -zero
 			if self.exp == '11111111':
 				if int(self.man,2) == 0:
 					self.value = 'inf'
 				else:
 					self.value = 'NaN'
 
-			if int(e,2) + int(m,2) == 0:
+			if int(self.exp ,2) + int(self.man ,2) == 0:
 				self.value = 'zero'
 	#end __init___
 
@@ -53,8 +62,15 @@ class bfloat:
 		else:
 			out = ((-1)**int(self.sign) * 2**(exp_mag - 127) * (man_mag + 1))
 			return (float32(out))
-	#end mag
-#end class
+
+	#Operator overloading
+	#Only works with self and b are both bfloats
+	def __add__(self, b):
+		return bfloat_add(self, b)
+	def __mul__(self, b):
+		return bfloat_mult(self, b)
+	
+#end bfloat class
 #----------------------------------------------------------------------------------------------
 
 #Randomly generates a 16bit binary
@@ -71,8 +87,8 @@ def bin_parser(a):
 #-----------------------------------------------------------------------------------------------
 
 #mult_bfloat16:
-#   input: (a, b) two 16bit binary string in Bfloat16 format, where a[0], b[0] are the MSBs
-#   output: (mult_out) 16bit binary string in Bfloat16 format, where mult_out[0] is the
+#   input: (a, b) two 16bit binary string in Bfloat format, where a[0], b[0] are the MSBs
+#   output: (mult_out) 16bit binary string in Bfloat format, where mult_out[0] is the
 def bfloat_mult(a, b):
 
 	#output sign
@@ -221,17 +237,23 @@ def bfloat_add(a, b):
 
 #For debugging
 if __name__ == '__main__':
-	s1,e1,m1 = bin_parser('0011101011111011')
-	s2,e2,m2 = bin_parser('1011101100000000')
-	a = bfloat(s1,e1,m1)
-	b = bfloat(s2,e2,m2)
-	sum = bfloat_add(a,b)
-	sum32 = a.display_dec() + b.display_dec() 
+	# s1,e1,m1 = bin_parser('0011101011111011')
+	# s2,e2,m2 = bin_parser('1011101100000000')
+	# a = bfloat(s1,e1,m1)
+	# b = bfloat(s2,e2,m2)
+	# sum = bfloat_add(a,b)
+	# sum32 = a.display_dec() + b.display_dec() 
 
-	print("binary a: ", a.sign, a.exp, a.man)
-	print("binary b: ", b.sign, b.exp, b.man)
-	print("decimal a: ", a.display_dec())
-	print("decimal b: ", b.display_dec())
-	print("sum32 : ", sum32)
-	print("sum   : ", sum.display_dec())
-	print("sum bin: ", sum.display_bin())
+	# print("binary a: ", a.sign, a.exp, a.man)
+	# print("binary b: ", b.sign, b.exp, b.man)
+	# print("decimal a: ", a.display_dec())
+	# print("decimal b: ", b.display_dec())
+	# print("sum32 : ", sum32)
+	# print("sum   : ", sum.display_dec())
+	# print("sum bin: ", sum.display_bin())
+	a = bfloat("0"*16)
+	b = bfloat("0"*16)
+	c = a*b
+	d = a+b
+	print(c.display_bin(), d.display_bin())
+	print( isinstance(a, bfloat))
