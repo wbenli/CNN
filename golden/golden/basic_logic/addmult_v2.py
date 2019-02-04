@@ -220,7 +220,7 @@ def bfloat_add(a, b):
 #End bfloat_add() -------------------------------------------------
 
 #For debugging
-if __name__ == '__main__'
+if __name__ == '__main__':
 	s1,e1,m1 = bin_parser('0011101011111011')
 	s2,e2,m2 = bin_parser('1011101100000000')
 	a = bfloat(s1,e1,m1)
