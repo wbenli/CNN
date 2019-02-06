@@ -1,6 +1,7 @@
 #Python program for bfloat, a truncated mantissa version of IEEE 754 float32
 from numpy import float32
 from numpy import random
+import struct
 import sys
 
 class bfloat:
@@ -30,16 +31,19 @@ class bfloat:
 
 			if int(self.exp ,2) + int(self.man ,2) == 0:
 				self.value = 'zero'
-	#end __init___
+	#end __init___() 
 
+	#display parsed binary representation
 	def display_bin(self):
 		return (self.sign, self.exp, self.man)
 	#end display_bin()
 	
+	#display unparsed binary represenation
 	def bin(self):
 		return self.sign + self.exp + self.man
 	#end bin()
 
+	#Display the decimal representation of bfloat
 	def display_dec(self):
 		exp_mag = int(self.exp,2)
 		start = -1
@@ -64,20 +68,35 @@ class bfloat:
 			return (float32(out))
 
 	#Operator overloading
-	#Only works with self and b are both bfloats
+	#Only works with self and b are both bfloat
 	def __add__(self, b):
 		return bfloat_add(self, b)
 	def __mul__(self, b):
 		return bfloat_mult(self, b)
-	
+
+#----------------------------------------------------------------------------------------------	
 #end bfloat class
 #----------------------------------------------------------------------------------------------
 
+
 #Randomly generates a 16bit binary
-def rand16bin():
+def rand16():
 	a = random.randint(2, size = 16)
 	s = ''.join(str(i) for i in a)
 	return s
+#-----------------------------------------------------------------------------------------------
+
+#Converters float32 to bfloat
+def f2bfloat(num):
+    packed = struct.pack('!f', num)
+    integers = [c for c in packed]
+    binaries = [bin(i) for i in integers]
+    stripped_binaries = [s.replace('0b', '') for s in binaries]
+    padded = [s.rjust(8, '0') for s in stripped_binaries]
+    
+    return bfloat(''.join(padded)[:16])
+
+
 #-----------------------------------------------------------------------------------------------
 
 #parsers single binary string into its sign, exp, and man components
@@ -251,9 +270,7 @@ if __name__ == '__main__':
 	# print("sum32 : ", sum32)
 	# print("sum   : ", sum.display_dec())
 	# print("sum bin: ", sum.display_bin())
-	a = bfloat("0"*16)
-	b = bfloat("0"*16)
-	c = a*b
-	d = a+b
-	print(c.display_bin(), d.display_bin())
-	print( isinstance(a, bfloat))
+	
+	b = f2bfloat(54.1567)
+	print(b.display_dec())
+
