@@ -3,6 +3,10 @@ import json
 import codecs
 import numpy as np
 import random as rd
+<<<<<<< HEAD
+=======
+from datetime import datetime
+>>>>>>> UPDATED: competonPET preprocess().
 from pprint import pprint
 from os import listdir
 from os.path import isfile, join
