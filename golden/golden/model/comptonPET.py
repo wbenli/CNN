@@ -3,7 +3,7 @@ import json
 import codecs
 import numpy as np
 import random as rd
-from datetime import dateime
+from datetime import datetime
 from pprint import pprint
 from os import listdir
 from os.path import isfile, join
@@ -26,9 +26,11 @@ def preprocess(weight_path):
         file_path = weight_path + '/' + str(file)
         with open(file_path) as f:
             obj = codecs.open(file_path, 'r', encoding='utf-8').read()
-            list = json.loads(obj)
-            weight = np.array(list)
-
+            lst = json.loads(obj)
+            weight = np.array(lst)
+            np.vectorize(weight)
+            weight = list(map(f2bfloat, weight))
+            print(weight)
             weights[str(file)] = weight
     return weights
 
