@@ -59,6 +59,10 @@ if(mult):
 
         for b in b_list[:rg]:
             b = ''.join([str(x) for x in b])
+    # for _ in range(rg):
+    # 	for _ in range(rg):
+    #         a = v2.rand16()
+    #         b = v2.rand16()
             fvt_mult.writelines([
                 "\t\ta = 16'b", a ,";\n",
                 "\t\tb = 16'b", b ,";\n",
@@ -123,7 +127,11 @@ if(add):
         a = ''.join([str(x) for x in a])
 
         for b in b_list[:rg]:
-            b = ''.join([str(x) for x in b])
+            b = ''.join([str(x) for x in b])   
+    # for _ in range(rg):
+    # 	for _ in range(rg):
+    #         a = v2.rand16()
+    #         b = v2.rand16()
             fvt_add.writelines([
                 "\t\ta = 16'b", a ,";\n",
                 "\t\tb = 16'b", b ,";\n",
